@@ -1,0 +1,75 @@
+{
+    "name": "SPOOF-NET",
+    "n_gpu": 6,
+
+    "arch": {
+        "type": "ASPNET",
+        "args": {
+            "feature_num": 80,
+            "num_classes": 2
+        }
+    },
+    "arch_mobilenetv3": {
+        "type": "MobileNetV3_Small",
+        "args": {
+            "num_classes": 2
+        }
+    },
+    "data_loader": {
+        "type": "MnistDataLoader",
+        "args":{
+            "data_dir": "../image/train",
+            "data_split_dir": "../image/6159-ori",
+            "is_split": false,
+            "batch_size": 1024,
+            "shuffle": false,
+            "num_workers": 12
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.02,
+            "weight_decay": 0,
+            "amsgrad": true
+        }
+    },
+    "loss": "FocalLoss_func",
+    "metrics": [
+        "accuracy", "top_k_acc"
+    ],
+    "lr_scheduler": {
+        "type": "ReduceLROnPlateau",
+        "args": {
+            "mode":"min",
+            "factor": 0.7,
+            "patience": 5,
+            "verbose": true
+        }
+    },
+    "trainer": {
+        "epochs": 10,
+
+        "save_dir": "saved/",
+        "save_period": 20,
+        "verbosity": 2,
+        
+        "monitor": "max val_accuracy",
+        "early_stop": 200,
+
+        "tensorboard": false
+    },
+    "test_data_loader": {
+        "type": "TestDataLoader",
+        "args":{
+            "data_dir": "../image/92-6159-spoof",
+            "batch_size": 1024,
+            "shuffle": false,
+            "num_workers": 0
+        }
+    },
+    "model_jianzhi": {
+            "sr": 0,//0.0001
+            "refine": ""//./saved/models/SPOOF-NET/0512_073701/pruned.pth
+    }
+}
